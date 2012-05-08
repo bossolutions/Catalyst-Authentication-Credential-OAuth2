@@ -1,0 +1,109 @@
+NAME
+    Catalyst::Authentication::Credential::OAuth2 - OAuth2 credential for
+    Catalyst::Plugin::Authentication framework.
+
+VERSION
+    Version 0.01
+
+SYNOPSIS
+    This module is based almost entirely on
+    Catalyst::Authentication::Credential::OAuth - although some of the
+    terminology has changed with OAuth2, I've kept the original parameter
+    names in order to simplify the migration of existing OAuth setups. The
+    only significant difference between the configuration is the addition of
+    the "callback_url" parameter.
+
+    In MyApp.pm
+
+        use Catalyst qw/
+            Authentication
+            Session
+            Session::Store::FastMmap
+            Session::State::Cookie
+        /;
+
+    In myapp.conf
+
+      <Plugin::Authentication>
+        default_realm  oauth2
+        <realms>
+          <oauth2>
+            <credential>
+              class  OAuth2
+              <providers>
+                <example.com>
+                  consumer_key             my_app_key
+                  consumer_secret          my_app_secret
+                  callback_url             http://path/to/catalyst/action
+                  request_token_endpoint   http://example.com/oauth/request_token
+                  access_token_endpoint    http://example.com/oauth/access_token
+                  user_auth_endpoint       http://example.com/oauth/authorize
+                </example.com>
+              </providers>
+            </credential>
+          </oauth>
+        </realms>
+     </Plugin::Authentication>
+
+    In controller code,
+
+     sub oauth : Local {
+       my ($self, $c) = @_;
+   
+       if( $c->authenticate( { provider => 'example.com' } ) ) {
+          #do something with $c->user
+       }
+     }
+
+USER METHODS
+  authenticate
+AUTHOR
+    Richard Wallman, "<wallmari at bossolutions.co.uk>"
+
+    This module is based on Catalyst::Authentication::Credential::OAuth,
+    changed to use Net::OAuth2 to do the heavy lifting.
+
+BUGS
+    Please report any bugs or feature requests to
+    "bug-catalyst-authentication-credential-oauth2 at rt.cpan.org", or
+    through the web interface at
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Catalyst-Authentication-
+    Credential-OAuth2>. I will be notified, and then you'll automatically be
+    notified of progress on your bug as I make changes.
+
+SUPPORT
+    You can find documentation for this module with the perldoc command.
+
+        perldoc Catalyst::Authentication::Credential::OAuth2
+
+    You can also look for information at:
+
+    *   RT: CPAN's request tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Catalyst-Authentication-Cr
+        edential-OAuth2>
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/Catalyst-Authentication-Credential-OAuth2>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/Catalyst-Authentication-Credential-OA
+        uth2>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/Catalyst-Authentication-Credential-OAut
+        h2/>
+
+ACKNOWLEDGEMENTS
+LICENSE AND COPYRIGHT
+    Copyright 2011 Richard Wallman.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of either: the GNU General Public License as published
+    by the Free Software Foundation; or the Artistic License.
+
+    See http://dev.perl.org/licenses/ for more information.
+
